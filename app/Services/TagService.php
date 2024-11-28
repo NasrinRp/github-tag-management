@@ -31,12 +31,21 @@ class TagService
         $repository->tags()->syncWithoutDetaching($existingTags->pluck('id')->toArray());
     }
 
-    public function searchRepositoriesByTag($username, $tagQuery): Collection
+    /**
+     * Searches a user's starred repositories.
+     *
+     * @param string $username
+     * @param string|null $tagQuery The tag query (optional). If null, returns user's all starred repositories.
+     * @return Collection
+     */
+    public function searchRepositoriesByTag(String $username, ?string $tagQuery): Collection
     {
         return StarredRepository::query()
             ->where('username', $username)
-            ->whereHas('tags', function ($query) use ($tagQuery) {
-                $query->where('name', 'like', '%' . $tagQuery . '%');
+            ->when(!is_null($tagQuery), function ($query) use ($tagQuery) {
+                $query->whereHas('tags', function ($q) use ($tagQuery) {
+                    $q->where('name', 'like', '%' . $tagQuery . '%');
+                });
             })
             ->get();
     }
