@@ -16,6 +16,14 @@ class TagController extends Controller
         $this->tagService = $tagService;
     }
 
+    /**
+     * Adds one or more tags to a starred repository by a user who starred it before.
+     *
+     * @param Request $request
+     * @param $username
+     * @param $repositoryId (Consider that repositoryId comes from git-hub not your database)
+     * @return JsonResponse
+     */
     public function addTag(Request $request, $username, $repositoryId): JsonResponse
     {
         $request->validate([
@@ -23,7 +31,8 @@ class TagController extends Controller
             'tags.*' => 'required|string|max:255',
         ]);
 
-        $repository = StarredRepository::where('id', $repositoryId)
+        $repository = StarredRepository::query()
+            ->where('repository_id', $repositoryId)
             ->where('username', $username)
             ->first();
 
@@ -40,19 +49,6 @@ class TagController extends Controller
         $this->tagService->addTagsToRepository($request->input('tags'), $repository);
 
         return response()->json(['message' => 'Tags added successfully']);
-    }
-
-    public function searchByTag(Request $request, $username): JsonResponse
-    {
-        $request->validate([
-            'tag' => 'required|string|max:255',
-        ]);
-
-        $tagQuery = $request->query('tag');
-
-        $repositories = $this->tagService->searchRepositoriesByTag($username, $tagQuery);
-
-        return response()->json($repositories);
     }
 }
 
