@@ -20,11 +20,11 @@ class TagController extends Controller
      * Adds one or more tags to a starred repository by a user who starred it before.
      *
      * @param Request $request
-     * @param $username
-     * @param $repositoryId (Consider that repositoryId comes from git-hub not your database)
+     * @param String $username
+     * @param Int $repositoryId (Consider that repositoryId comes from git-hub not your database)
      * @return JsonResponse
      */
-    public function addTag(Request $request, $username, $repositoryId): JsonResponse
+    public function addTag(Request $request, string $username, int $repositoryId): JsonResponse
     {
         $request->validate([
             'tags' => 'required|array',
