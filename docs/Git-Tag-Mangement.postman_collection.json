@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "94a4a334-369b-48fd-92ac-2c8fbb2e74ca",
+		"name": "Git-Tag-Mangement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "24637986",
+		"description": "This collection demonstrates the API requests for the GitHub Tag Management project. It includes endpoints for fetching starred repositories, adding tags to repositories, and searching repositories by tags. All requests are designed to interact with the GitHub API and allow you to manage starred repositories for a specific user."
+	},
+	"item": [
+		{
+			"name": "Fetch Starred Repositories",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://127.0.0.1:8000/api/nasrinrp/starred-repositories",
+				"description": "This request fetches the starred repositories for a given GitHub user. The username is passed as a part of the URL."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Tags",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tags\": [\"back-end\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8000/api/nasrinrp/starred-repositories/31859403/tags",
+				"description": "This request adds tags to a specific starred repository, identified by its repository ID. Tags are provided in the request body as an array."
+			},
+			"response": []
+		},
+		{
+			"name": "Search by Tag",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/nasrinrp/starred-repositories?tag=PHP",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"nasrinrp",
+						"starred-repositories"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "PHP"
+						}
+					],
+					"description": "This request searches for repositories that are tagged with a specific tag. The tag is provided as a query parameter in the URL."
+				}
+			},
+			"response": []
+		}
+	]
+}
