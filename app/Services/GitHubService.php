@@ -26,8 +26,6 @@ class GitHubService
      */
     public function fetchStarredRepositories(string $username): array
     {
-        $url = "{$this->baseUrl}/users/{$username}/starred";
-        $headers = $this->getAuthorizationHeaders();
         $repositories = [];
         $page = 1;
 
@@ -95,7 +93,7 @@ class GitHubService
     {
         return match ($statusCode) {
             403 => $response->header('X-RateLimit-Remaining') === '0'
-                ? 'Rate limit exceeded. Please wait and try again later.'
+                ? 'Rate limit exceeded. Please wait before making more requests.'
                 : 'Access forbidden. Please check your token or permissions.',
             404 => 'GitHub user not found.',
             default => 'An error occurred while fetching data from GitHub: ' . $response->body(),
