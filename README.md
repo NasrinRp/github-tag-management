@@ -111,7 +111,7 @@ php artisan test
 ```
 ## Postman Collection
 
-For testing and interacting with the API, you can use the included [Postman Collection](./docs/Git-Tag-Management-Postman-Collection.json).
+For testing and interacting with the API, you can use the included [Postman Collection](docs/Git-Tag-Management-Postman-Collection.json).
 
 ### How to Use
 
