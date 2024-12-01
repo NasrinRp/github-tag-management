@@ -38,8 +38,6 @@ class GitHubService
 
             $repositories = array_merge($repositories, $response->json());
 
-            $this->checkRateLimit($response);
-
             $page++;
         } while (count($response->json()) === $this->perPage);
 
@@ -98,19 +96,5 @@ class GitHubService
             404 => 'GitHub user not found.',
             default => 'An error occurred while fetching data from GitHub: ' . $response->body(),
         };
-    }
-
-    /**
-     * Check the remaining rate limit from the response headers.
-     *
-     * @param Response $response
-     * @throws Exception
-     */
-    protected function checkRateLimit(Response $response): void
-    {
-        $remaining = (int) $response->header('X-RateLimit-Remaining', 1);
-        if ($remaining === 0) {
-            throw new Exception('Rate limit exceeded. Please wait before making more requests.');
-        }
     }
 }

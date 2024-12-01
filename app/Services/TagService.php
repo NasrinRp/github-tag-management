@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Tag;
 use App\Models\StarredRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class TagService
 {
@@ -17,18 +18,21 @@ class TagService
      */
     public function addTagsToRepository(array $tags, StarredRepository $repository): void
     {
-        $existingTags = Tag::query()->whereIn('name', $tags)->get();
-        $existingTagNames = $existingTags->pluck('name')->toArray();
+        DB::transaction(function () use ($tags, $repository) {
+            $existingTags = Tag::query()->whereIn('name', $tags)->get();
+            $existingTagNames = $existingTags->pluck('name')->toArray();
 
-        $newTags = array_diff($tags, $existingTagNames);
+            $newTags = array_diff($tags, $existingTagNames);
 
-        if (!empty($newTags)) {
-            Tag::insert(array_map(fn($tag) => ['name' => $tag], $newTags));
-            $newTagModels = Tag::query()->whereIn('name', $newTags)->get();
-            $existingTags = $existingTags->merge($newTagModels);
-        }
+            if (!empty($newTags)) {
+                $tagsToInsert = array_map(fn($tag) => ['name' => $tag, 'created_at' => now(), 'updated_at' => now()], $newTags);
+                Tag::insert($tagsToInsert);
+                $newTagModels = Tag::query()->whereIn('name', $newTags)->get();
+                $existingTags = $existingTags->merge($newTagModels);
+            }
 
-        $repository->tags()->syncWithoutDetaching($existingTags->pluck('id')->toArray());
+            $repository->tags()->syncWithoutDetaching($existingTags->pluck('id')->toArray());
+        });
     }
 
     /**
