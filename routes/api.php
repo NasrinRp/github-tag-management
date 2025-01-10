@@ -11,3 +11,7 @@ Route::prefix('{username}/starred-repositories')->group(function () {
     Route::post('{repositoryId}/tags', [TagController::class, 'addTag']); // Add tag to a stared repository
 });
 
+Route::get('check', function () {
+    return 'ok!';
+});
+
